@@ -12,6 +12,8 @@ COPY . .
 # create virtual environment
 CMD ["/bin/bash -c source venv/bin/activate"]
 
+RUN ls -al
+
 COPY .env BercandaDotComApp/.env
 
 # install dependencies  
