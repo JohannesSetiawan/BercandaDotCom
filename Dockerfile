@@ -12,8 +12,6 @@ COPY . .
 # create virtual environment
 CMD ["/bin/bash -c source venv/bin/activate"]
 
-COPY ./.env ./BercandaDotComApp/.env
-
 # install dependencies  
 RUN pip install --upgrade pip  
 
