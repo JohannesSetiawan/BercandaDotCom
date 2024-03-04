@@ -114,10 +114,62 @@ class GetCustomJoke(APIView):
         except Exception as e:
                 return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-class UpdateCustomJoke(APIView):
-    def put(self, request):
-        return 'Modified Jokes'
-
 class DeleteCustomJoke(APIView):
     def delete(self, request):
-        return "Deleted Jokes"
+        api_keys = request.data.get('api_keys')
+        joke_id = request.data.get('joke_id')
+        try:
+            user_exist = AppUser.objects.filter(api_keys=api_keys).exists()
+            if user_exist:
+                joke = Jokes.objects.get(id=joke_id)
+                joke.delete()
+                return Response({'msg':'joke deleted'}, status=status.HTTP_200_OK)
+            else:
+                raise Exception('Wrong api keys')
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+class UpdateCustomJoke(APIView):
+    def put(self, request):
+        joke_id = request.data.get('joke_id')
+        api_keys = request.data.get('api_keys')
+        joke = request.data.get('joke')
+        categories = request.data.get('categories')
+        try:
+            user_exist = AppUser.objects.filter(api_keys=api_keys).exists()
+            if user_exist:
+                jokeObj = Jokes.objects.get(id = joke_id)
+                jokeObj.joke = joke
+                jokeObj.categories.clear()
+
+                for category_name in categories:
+                    try:
+                        category_name=category_name.lower()
+                        category = Category.objects.create(name=category_name.lower())
+                        category.save()
+                        category = Category.objects.get(name=category_name)
+                        jokeObj.categories.add(category)
+                    except:
+                        category_name=category_name.lower()
+                        category = Category.objects.get(name=category_name)
+                        jokeObj.categories.add(category)
+                jokeObj.save()
+                serializer = JokesSerializer(jokeObj)
+                serialized_jokes = serializer.data
+                return Response(serialized_jokes, status=status.HTTP_200_OK)
+            else:
+                raise Exception("User doesnt exist!")
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+
+class GetAllCustomJokes(APIView):
+    def get(self, request, api_keys):
+        try:
+            user = AppUser.objects.get(api_keys=api_keys)
+            jokes = Jokes.objects.filter(creator = user)
+            serializer = JokesSerializer(jokes, many=True)
+            serialized_jokes = serializer.data
+            return Response(serialized_jokes, status=status.HTTP_200_OK)
+        except Exception as e:
+                return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
