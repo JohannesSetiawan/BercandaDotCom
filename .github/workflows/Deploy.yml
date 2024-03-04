@@ -60,11 +60,6 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           IMAGE_NAME: REGISTRY_IMAGE
           DEBUG: ${{ secrets.DEBUG }}
-          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}" >> .env
-          DB_HOST: ${{ secrets.DB_HOST }}" >> .env
-          DB_NAME: ${{ secrets.DB_NAME }}" >> .env
-          DB_USER: ${{ secrets.DB_USER }}" >> .env
-          DB_PASS: ${{ secrets.DB_PASS }}" >> .env
 
   deploy:
     name: Deploy
