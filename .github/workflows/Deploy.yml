@@ -22,9 +22,9 @@ jobs:
           echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
           echo "DB_USER=${{ secrets.DB_USER }}" >> .env
           echo "DB_PASS=${{ secrets.DB_PASS }}" >> .env
-          cp .env BercandaDotComApp/.env
           python manage.py makemigrations
           python manage.py migrate
+          echo $(ls -al)
   
   publish:
     needs: build
