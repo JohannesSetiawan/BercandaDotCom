@@ -12,9 +12,7 @@ COPY . .
 # create virtual environment
 CMD ["/bin/bash -c source venv/bin/activate"]
 
-RUN echo "Listing files in directory:" && ls -al
-
-COPY .env BercandaDotComApp/.env
+COPY ./.env ./BercandaDotComApp/.env
 
 # install dependencies  
 RUN pip install --upgrade pip  
