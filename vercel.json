@@ -1,0 +1,14 @@
+{
+    "builds": [
+      {
+        "src": "BercandaDotComApp/wsgi.py",
+        "use": "@vercel/python"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "BercandaDotComApp/wsgi.py"
+      }
+    ]
+}
