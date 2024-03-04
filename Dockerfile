@@ -20,6 +20,8 @@ RUN pip install -r requirements.txt
 
 RUN python manage.py runserver
 
+RUN systemctl status postgresql
+
 # port where the Django app runs  
 EXPOSE 8000
 EXPOSE 5432
