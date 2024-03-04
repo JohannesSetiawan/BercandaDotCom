@@ -44,7 +44,7 @@ jobs:
         uses: docker/setup-buildx-action@v1
 
       - name: Log in to Docker Hub
-        run: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        run: echo "$DOCKER_PASSWORD" | docker login -username "$DOCKER_USERNAME" --password-stdin
 
       - name: Build and push Docker image
         run: |
@@ -52,9 +52,9 @@ jobs:
           docker buildx build --platform linux/amd64,linux/arm64 -t $DOCKER_USERNAME/$IMAGE_NAME:latest .
           docker push $DOCKER_USERNAME/$IMAGE_NAME:latest
         env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_USERNAME: ${{ secrets.REGISTRY_USER }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-          IMAGE_NAME: your_image_name
+          IMAGE_NAME: REGISTRY_IMAGE
 
   deploy:
     name: Deploy
