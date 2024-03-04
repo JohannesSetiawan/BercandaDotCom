@@ -18,6 +18,8 @@ RUN pip install --upgrade pip
 # run this command to install all dependencies  
 RUN pip install -r requirements.txt 
 
+RUN echo $(ls -al)
+
 # port where the Django app runs  
 EXPOSE 8000
 
