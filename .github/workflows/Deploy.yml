@@ -14,13 +14,16 @@ jobs:
       - name: Install SSH client
         run: sudo apt-get update && sudo apt-get install -y openssh-client
       
+      - name: Set up SSH key
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ssh_key.pem
+          chmod 600 ssh_key.pem
+          eval $(ssh-agent)
+          ssh-add ssh_key.pem
+      
       - name: SSH into server and deploy
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.STATIC_IP }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY  }}
-          script: |
+        run: |
+            ssh -o StrictHostKeyChecking=no -i ssh_key.pem ${{ secrets.SSH_USERNAME }}@${{ secrets.STATIC_IP }} "
             sudo docker container rm -f law-tugas01 || true
             sudo docker image rm -f ${{ secrets.REGISTRY_USER }}/${{ secrets.REGISTRY_IMAGE }}:latest || true
             sudo docker run --name law-tugas01 -d -p 8000:8000 ${{ secrets.REGISTRY_USER }}/${{ secrets.REGISTRY_IMAGE }}:latest
