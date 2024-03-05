@@ -29,7 +29,7 @@ class Register(APIView):
                 api_keys = generate_random_string(60)
                 if not AppUser.objects.filter(api_keys=api_keys).exists():
                     api_keys_existed=False
-            new_user.api_keys = generate_random_string(15)
+            new_user.api_keys = api_keys
             new_user.save()
             serializer = UserSerializer(new_user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
