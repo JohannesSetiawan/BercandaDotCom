@@ -30,32 +30,25 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
 
-    services:
-      docker:
-        image: docker:19.03.12
-        options: --privileged
-        ports:
-          - 2375:2375
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: 
 
-      - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v1
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Login to Docker Hub
         uses: ./
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and push Docker image
+        uses: actions/checkout@v3
         run: |
           docker info
-          docker-compose up --build
+          docker build . --file Dockerfile --tag latest:$(date +%s)
         env:
-          DOCKER_USERNAME: ${{ secrets.REGISTRY_USER }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           IMAGE_NAME: ${{ secrets.REGISTRY_IMAGE }}
 
