@@ -48,13 +48,16 @@ class APIToken(APIView):
         password = request.data.get('password')
         try:
             if username is not None:
-                if AppUser.objects.get(password=password) == AppUser.objects.get(username=username):
+                user_exist = authenticate(request=request, username=username, password=password)
+                if user_exist is not None:
                     user = AppUser.objects.get(username=username)
                     return Response({'api_keys':user.api_keys}, status=status.HTTP_200_OK)
                 else :
                     raise Exception("Username or password is wrong!")
             elif email is not None:
-                if AppUser.objects.get(password=password) == AppUser.objects.get(email=email):
+                username = AppUser.objects.get(email=email).username
+                user_exist = authenticate(request=request, username=username, password=password)
+                if user_exist is not None:
                     user = AppUser.objects.get(email=email)
                     return Response({'api_keys':user.api_keys}, status=status.HTTP_200_OK)
                 else :
@@ -62,7 +65,7 @@ class APIToken(APIView):
             else:
                 raise Exception("Some fields are empty!")
         except Exception as e:
-            if "AppUser" in e:
+            if "AppUser" in str(e):
                 return Response({'error': "User not found!"}, status=status.HTTP_400_BAD_REQUEST)
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -101,7 +104,7 @@ class CreateCustomJoke(APIView):
             serialized_jokes = serializer.data
             return Response(serialized_jokes, status=status.HTTP_200_OK)
         except Exception as e:
-            if "AppUser" in e:
+            if "AppUser" in str(e):
                 return Response({'error': "User not found!"}, status=status.HTTP_400_BAD_REQUEST)
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -116,9 +119,9 @@ class GetCustomJoke(APIView):
             joke = random.choice(serialized_jokes)
             return Response(joke, status=status.HTTP_200_OK)
         except Exception as e:
-            if "AppUser" in e:
+            if "AppUser" in str(e):
                 return Response({'error': "User not found!"}, status=status.HTTP_400_BAD_REQUEST)
-            if "Category" in e:
+            if "Category" in str(e):
                 return Response({'error': "Category not found!"}, status=status.HTTP_400_BAD_REQUEST)
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -135,7 +138,7 @@ class DeleteCustomJoke(APIView):
             else:
                 raise Exception('Wrong api keys')
         except Exception as e:
-            if "Jokes" in e:
+            if "Jokes" in str(e):
                 return Response({'error': "Jokes not found!"}, status=status.HTTP_400_BAD_REQUEST)
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -170,7 +173,7 @@ class UpdateCustomJoke(APIView):
             else:
                 raise Exception("User doesnt exist!")
         except Exception as e:
-            if "Jokes" in e:
+            if "Jokes" in str(e):
                 return Response({'error': "Jokes not found!"}, status=status.HTTP_400_BAD_REQUEST)
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
@@ -184,6 +187,6 @@ class GetAllCustomJokes(APIView):
             serialized_jokes = serializer.data
             return Response(serialized_jokes, status=status.HTTP_200_OK)
         except Exception as e:
-            if "AppUser" in e:
+            if "AppUser" in str(e):
                 return Response({'error': "User not found!"}, status=status.HTTP_400_BAD_REQUEST)
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
