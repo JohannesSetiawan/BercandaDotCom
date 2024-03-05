@@ -6,30 +6,9 @@ on:
       - '*'
 
 jobs:
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      
-      - name: Install dependencies and migrate
-        run: |
-          pip install -r requirements.txt
-          echo "DEBUG=${{ secrets.DEBUG }}" >> .env
-          echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> .env
-          echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
-          echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
-          echo "DB_USER=${{ secrets.DB_USER }}" >> .env
-          echo "DB_PASS=${{ secrets.DB_PASS }}" >> .env
-          python manage.py makemigrations
-          python manage.py migrate
-          echo $(ls -al)
-
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
-    needs: publish
     if: github.ref == 'refs/heads/master'
     steps:
       - name: Install SSH client
