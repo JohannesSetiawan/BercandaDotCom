@@ -9,6 +9,10 @@ media
 # Backup files # 
 *.bak 
 
+# Docker #
+docker-compose.yml
+Dockerfile
+
 # If you are using PyCharm # 
 # User-specific stuff
 .idea/**/workspace.xml
