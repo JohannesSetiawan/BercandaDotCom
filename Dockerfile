@@ -9,9 +9,6 @@ WORKDIR .
 # copy whole project to your docker home directory. 
 COPY . .
 
-# create virtual environment
-CMD ["/bin/bash -c source venv/bin/activate"]
-
 # install dependencies  
 RUN pip install --upgrade pip  
 

@@ -43,11 +43,8 @@ jobs:
       - name: Build and push Docker image
         run: |
           docker info
-          docker build . --file Dockerfile --tag latest:$(date +%s)
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-          IMAGE_NAME: ${{ secrets.REGISTRY_IMAGE }}
+          docker compose --build
+          docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.REGISTRY_IMAGE }}:latest
 
   deploy:
     name: Deploy
