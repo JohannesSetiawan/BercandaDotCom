@@ -19,7 +19,7 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ssh_key.pem
           chmod 600 ssh_key.pem
           eval $(ssh-agent)
-          ssh-add ssh_key.pem
+          echo "${{ secrets.SSH_PASSPHRASE }}" | ssh-add ssh_key.pem
       
       - name: SSH into server and deploy
         run: |
