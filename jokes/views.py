@@ -23,7 +23,7 @@ class Register(APIView):
         email = request.data.get('email')
         print(email)
         try:
-            new_user = AppUser.objects.create(username=username,password=password, email=email)
+            new_user = AppUser.objects.create_user(username=username,password=password, email=email)
             api_keys_existed = True
             while api_keys_existed:
                 api_keys = generate_random_string(60)
