@@ -31,8 +31,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 
-
       - name: Checkout code
         uses: actions/checkout@v3
 
