@@ -62,6 +62,8 @@ class APIToken(APIView):
             else:
                 raise Exception("Some fields are empty!")
         except Exception as e:
+            if "AppUser" in e:
+                return Response({'error': "User not found!"}, status=status.HTTP_400_BAD_REQUEST)
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class Joke(APIView):
@@ -99,6 +101,8 @@ class CreateCustomJoke(APIView):
             serialized_jokes = serializer.data
             return Response(serialized_jokes, status=status.HTTP_200_OK)
         except Exception as e:
+            if "AppUser" in e:
+                return Response({'error': "User not found!"}, status=status.HTTP_400_BAD_REQUEST)
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class GetCustomJoke(APIView):
@@ -112,7 +116,11 @@ class GetCustomJoke(APIView):
             joke = random.choice(serialized_jokes)
             return Response(joke, status=status.HTTP_200_OK)
         except Exception as e:
-                return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            if "AppUser" in e:
+                return Response({'error': "User not found!"}, status=status.HTTP_400_BAD_REQUEST)
+            if "Category" in e:
+                return Response({'error': "Category not found!"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class DeleteCustomJoke(APIView):
     def delete(self, request):
@@ -127,6 +135,8 @@ class DeleteCustomJoke(APIView):
             else:
                 raise Exception('Wrong api keys')
         except Exception as e:
+            if "Jokes" in e:
+                return Response({'error': "Jokes not found!"}, status=status.HTTP_400_BAD_REQUEST)
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class UpdateCustomJoke(APIView):
@@ -160,6 +170,8 @@ class UpdateCustomJoke(APIView):
             else:
                 raise Exception("User doesnt exist!")
         except Exception as e:
+            if "Jokes" in e:
+                return Response({'error': "Jokes not found!"}, status=status.HTTP_400_BAD_REQUEST)
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
 
@@ -172,4 +184,6 @@ class GetAllCustomJokes(APIView):
             serialized_jokes = serializer.data
             return Response(serialized_jokes, status=status.HTTP_200_OK)
         except Exception as e:
-                return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            if "AppUser" in e:
+                return Response({'error': "User not found!"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
