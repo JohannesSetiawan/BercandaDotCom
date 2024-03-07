@@ -7,6 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from .serializers import JokesSerializer, UserSerializer
 import random
+import re
 import string
 
 def generate_random_string(length):
@@ -23,6 +24,10 @@ class Register(APIView):
         email = request.data.get('email')
         print(email)
         try:
+            if re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', email) is None:
+                raise Exception('Email format is wrong.')
+            if username.strip() == "" or password.strip() == "":
+                raise Exception('Some request body are empty')
             new_user = AppUser.objects.create_user(username=username,password=password, email=email)
             api_keys_existed = True
             while api_keys_existed:
@@ -34,11 +39,11 @@ class Register(APIView):
             serializer = UserSerializer(new_user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except Exception as e:
-            error = str(e)
-            if "UNIQUE" in error:
+            error = str(e).lower()
+            if "unique" in error:
                 return Response({'error': 'Username or email already exist!'}, status=status.HTTP_400_BAD_REQUEST)
-            if "NULL" in error:
-                return Response({'error': 'Some fields are empty!'}, status=status.HTTP_400_BAD_REQUEST)
+            if "null" in error or "nonetype" in error:
+                return Response({'error': 'Some request body are empty!'}, status=status.HTTP_400_BAD_REQUEST)
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class APIToken(APIView):
@@ -85,10 +90,15 @@ class CreateCustomJoke(APIView):
         joke = request.data.get('joke')
         categories = request.data.get('categories')
         try:
+            if joke.strip() == "":
+                raise Exception('Joke request body are empty')
+            if len(categories) == 0:
+                raise Exception('Categories request body are empty')
             creator = AppUser.objects.get(api_keys = api_keys)
-            print(creator.id)
             new_joke = Jokes.objects.create(creator = creator,joke=joke)
             for category_name in categories:
+                if category_name.strip() == '':
+                    raise Exception("Category name can't be an empty string")
                 try:
                     category_name=category_name.lower()
                     category = Category.objects.create(name=category_name.lower())
@@ -149,6 +159,10 @@ class UpdateCustomJoke(APIView):
         joke = request.data.get('joke')
         categories = request.data.get('categories')
         try:
+            if joke.strip() == "":
+                raise Exception('Joke request body are empty')
+            if len(categories) == 0:
+                raise Exception('Categories request body are empty')
             user_exist = AppUser.objects.filter(api_keys=api_keys).exists()
             if user_exist:
                 jokeObj = Jokes.objects.get(id = joke_id)
@@ -156,6 +170,8 @@ class UpdateCustomJoke(APIView):
                 jokeObj.categories.clear()
 
                 for category_name in categories:
+                    if category_name.strip() == '':
+                        raise Exception("Category name can't be an empty string")
                     try:
                         category_name=category_name.lower()
                         category = Category.objects.create(name=category_name.lower())
