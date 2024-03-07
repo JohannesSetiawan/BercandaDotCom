@@ -25,9 +25,9 @@ class Register(APIView):
         print(email)
         try:
             if re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', email) is None:
-                raise Exception('Email format is wrong.')
+                raise Exception('Email format is wrong!')
             if username.strip() == "" or password.strip() == "":
-                raise Exception('Some request body are empty')
+                raise Exception('Some request body are empty!')
             new_user = AppUser.objects.create_user(username=username,password=password, email=email)
             api_keys_existed = True
             while api_keys_existed:
@@ -68,7 +68,7 @@ class APIToken(APIView):
                 else :
                     raise Exception("Email or password is wrong!")
             else:
-                raise Exception("Some fields are empty!")
+                raise Exception("Some request body are empty!")
         except Exception as e:
             if "AppUser" in str(e):
                 return Response({'error': "User not found!"}, status=status.HTTP_400_BAD_REQUEST)
@@ -91,14 +91,14 @@ class CreateCustomJoke(APIView):
         categories = request.data.get('categories')
         try:
             if joke.strip() == "":
-                raise Exception('Joke request body are empty')
+                raise Exception('Joke request body are empty!')
             if len(categories) == 0:
-                raise Exception('Categories request body are empty')
+                raise Exception('Categories request body are empty!')
             creator = AppUser.objects.get(api_keys = api_keys)
             new_joke = Jokes.objects.create(creator = creator,joke=joke)
             for category_name in categories:
                 if category_name.strip() == '':
-                    raise Exception("Category name can't be an empty string")
+                    raise Exception("Category name can't be an empty string!")
                 try:
                     category_name=category_name.lower()
                     category = Category.objects.create(name=category_name.lower())
@@ -160,9 +160,9 @@ class UpdateCustomJoke(APIView):
         categories = request.data.get('categories')
         try:
             if joke.strip() == "":
-                raise Exception('Joke request body are empty')
+                raise Exception('Joke request body are empty!')
             if len(categories) == 0:
-                raise Exception('Categories request body are empty')
+                raise Exception('Categories request body are empty!')
             user_exist = AppUser.objects.filter(api_keys=api_keys).exists()
             if user_exist:
                 jokeObj = Jokes.objects.get(id = joke_id)
@@ -171,7 +171,7 @@ class UpdateCustomJoke(APIView):
 
                 for category_name in categories:
                     if category_name.strip() == '':
-                        raise Exception("Category name can't be an empty string")
+                        raise Exception("Category name can't be an empty string!")
                     try:
                         category_name=category_name.lower()
                         category = Category.objects.create(name=category_name.lower())
