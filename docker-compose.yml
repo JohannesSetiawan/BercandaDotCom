@@ -19,5 +19,7 @@ services:
       - POSGRES_HOST=${DB_HOST}
       - DEBUG=${DEBUG}
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+    env_file:
+      - .env
 volumes:
   data:
