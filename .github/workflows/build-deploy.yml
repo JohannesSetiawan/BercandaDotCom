@@ -52,10 +52,6 @@ jobs:
         echo "POSTGRES_DB=${{ secrets.DB_NAME }}" >> .env
         echo "POSGRES_HOST=${{ secrets.DB_HOST }}" >> .env
 
-    - name: See .env
-      run: |
-        cat .env
-
     - name: Login to Docker
       uses: docker/login-action@v3
       with:
