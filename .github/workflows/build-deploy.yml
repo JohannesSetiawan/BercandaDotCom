@@ -48,7 +48,7 @@ jobs:
 
     - name: Push Docker Image
       run: |
-        docker push johannessetiawan/law-tugas01:tryworkflows
+        docker push johannessetiawan/law-tugas01:latest
 
   deploy:
     runs-on: ubuntu-latest
@@ -65,5 +65,5 @@ jobs:
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
             sudo docker container rm -f law-tugas01 || true
-            sudo docker image rm -f johannessetiawan/law-tugas01:tryworkflows || true
-            sudo docker run --name law-tugas01 -d -p 8000:8000 johannessetiawan/law-tugas01:tryworkflows
+            sudo docker image rm -f johannessetiawan/law-tugas01:latest || true
+            sudo docker run --name law-tugas01 -d -p 8000:8000 johannessetiawan/law-tugas01:latest
