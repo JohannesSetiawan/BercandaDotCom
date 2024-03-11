@@ -32,7 +32,12 @@ jobs:
   
   publish:
     runs-on: ubuntu-latest
+    needed: build
     steps:
+    - name: See all files
+      run: |
+          ls -a
+          
     - name: Login to Docker
       uses: docker/login-action@v3
       with:
