@@ -49,3 +49,20 @@ jobs:
     - name: Push Docker Image
       run: |
         docker push johannessetiawan/law-tugas01:tryworkflows
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: publish
+    steps:
+      - uses : actions/checkout@v3
+      - name: SSH to GCP
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          script: |
+            whoami
+            ls -al
