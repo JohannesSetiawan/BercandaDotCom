@@ -10,8 +10,6 @@ media
 *.bak 
 
 # Docker #
-docker-compose.yml
-Dockerfile
 docker.txt
 
 # If you are using PyCharm # 
