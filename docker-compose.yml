@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: johannessetiawan/law-tugas01
-    image: johannessetiawan/law-tugas01
+    image: johannessetiawan/law-tugas01:tryworkflows
     command: sh -c "python manage.py runserver 0.0.0.0:8000"
     restart: always
     volumes:
