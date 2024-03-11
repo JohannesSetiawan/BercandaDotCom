@@ -36,8 +36,7 @@ jobs:
     steps:
     - name: See all files
       run: |
-          ls -a > files.txt
-          cat files.txt
+          cat docker-compose.yml
 
     - name: Login to Docker
       uses: docker/login-action@v3
